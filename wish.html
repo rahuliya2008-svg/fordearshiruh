@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Happy Birthday Simran!</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --bg1: #ffdde1;
+      --bg2: #ee9ca7;
+      --accent: #d81b60;
+      --note-shadow: rgba(0,0,0,0.2);
+      --quiz-bg: #e8f4ff;
+      --quiz-border: #b5dcff;
+      --text: #2b2b2b;
+    }
+    body{
+      margin:0;
+      background:linear-gradient(135deg,var(--bg1),var(--bg2));
+      font-family:'Segoe UI',sans-serif;
+      color:var(--text);
+      overflow-x:hidden;
+    }
+    .center{ text-align:center; padding:28px; }
+    h1{ margin:6px 0; font-size:2rem; }
+    .btn{
+      background:linear-gradient(90deg,var(--accent),#ff66cc);
+      border:none; color:white; font-weight:600;
+      padding:12px 22px; border-radius:28px; cursor:pointer;
+      box-shadow:0 6px 18px rgba(216,27,96,0.2);
+    }
+    .btn:disabled{opacity:0.6;cursor:not-allowed}
+
+    /* Celebration */
+    #celebration{display:none;position:relative;}
+    #celebration img{ max-width:45%; border-radius:14px; box-shadow:0 8px 30px rgba(0,0,0,0.15); }
+    #cake{margin-top:20px; opacity:0; transition:opacity 1.2s;}
+    #cake.show{opacity:1;}
+    .cake-base { font-size:70px; }
+    .flame {
+      position: relative;
+      display:inline-block;
+      width: 10px; height: 20px;
+      background: radial-gradient(ellipse at center, #ffeb3b 0%, #ff9800 60%, transparent 100%);
+      border-radius:50% 50% 50% 50%;
+      animation: flicker 0.3s infinite alternate;
+      margin:0 15px;
+    }
+    @keyframes flicker {
+      0% { transform: scale(1) translateY(0); opacity:0.9; }
+      50% { transform: scale(1.2) translateY(-2px); opacity:1; }
+      100% { transform: scale(0.9) translateY(2px); opacity:0.7; }
+    }
+
+    /* Balloons */
+    .balloon {
+      position: absolute;
+      bottom: -150px;
+      font-size: 40px;
+      animation: floatBalloon 10s linear infinite;
+    }
+    @keyframes floatBalloon {
+      from { transform: translateY(0); }
+      to { transform: translateY(-120vh); }
+    }
+
+    /* Confetti */
+    .confetti {
+      position: fixed;
+      top: -20px;
+      width: 10px; height: 10px;
+      background: red;
+      opacity: 0.8;
+      animation: fallConfetti linear forwards;
+      z-index: 999;
+    }
+    @keyframes fallConfetti {
+      to { transform: translateY(110vh) rotate(360deg); opacity:0; }
+    }
+
+    /* Notes */
+    #notes{ display:none; max-width:720px; margin:0 auto; position:relative; min-height:260px; }
+    .sticky{
+      width:80%; max-width:500px;
+      padding:24px;
+      border-radius:12px;
+      box-shadow:0 8px 22px var(--note-shadow);
+      position:absolute;
+      top:20px;
+      opacity:0;
+      transform:scale(0.9);
+      transition: all .6s ease;
+      color:#333;
+    }
+    .sticky.show{ opacity:1; transform:translateX(-50%) scale(1); left:50%; z-index:2; }
+    .sticky.exit-left{ opacity:0; transform:translateX(-150%) scale(0.9); z-index:1; }
+    .sticky.exit-right{ opacity:0; transform:translateX(150%) scale(0.9); z-index:1; }
+    .note-controls{ margin-top:240px; text-align:center; }
+    .note-controls .btn{ margin:0 6px; }
+
+    /* Quiz */
+    #quiz{ display:none; padding:18px; max-width:720px; margin:0 auto; }
+    .quiz-card{
+      background:var(--quiz-bg);
+      border:2px solid var(--quiz-border);
+      border-radius:14px;
+      padding:22px;
+      box-shadow:0 8px 22px rgba(0,0,0,0.15);
+    }
+    .question-text{ font-size:1.1rem; font-weight:600; margin-bottom:14px; }
+    .option{ display:block; background:white; border:1px solid #ddd; border-radius:8px; padding:10px; margin:8px 0; cursor:pointer; transition:0.3s; }
+    .option:hover{ background:#f0f8ff; }
+    .option input{ margin-right:10px; }
+    .pager{ display:flex; justify-content:space-between; margin-top:14px; }
+    .hidden{ display:none !important; }
+
+    #finalMsg{ display:none; text-align:center; padding:24px; }
+
+    /* Floating Emojis */
+    .emoji {
+      position: fixed;
+      bottom: -40px;
+      font-size: 20px;
+      opacity: 0.9;
+      animation: floatUp linear forwards;
+      pointer-events: none;
+      z-index: 1000;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity:1; }
+      100% { transform: translateY(-120vh) scale(1.3); opacity:0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="center" id="welcome">
+  <h1>🎉 Happy Birthday, Simran! 🎉</h1>
+  <p>Click celebrate to begin your surprise!</p>
+  <audio id="music" src="samjhawan.mp3" loop></audio>
+  <button class="btn" id="celebrateBtn">Celebrate 🎊</button>
+</div>
+
+<div class="center" id="celebration">
+  <img src="simran-photo.jpg" alt="Simran" />
+  <h2>Happy birthday dear Simran 💖</h2>
+  <div id="cake">
+    <div>
+      <span class="flame"></span>
+      <span class="flame"></span>
+      <span class="flame"></span>
+    </div>
+    <div class="cake-base">🎂🎂🎂</div>
+  </div>
+  <div style="margin-top:14px;">
+    <button class="btn" id="toNotesBtn">Special Notes ✨</button>
+  </div>
+</div>
+
+<!-- Notes -->
+<div id="notes">
+  <div id="stickyContainer"></div>
+  <div class="note-controls">
+    <button class="btn" id="notePrev">Prev</button>
+    <button class="btn" id="noteNext">Next ➜</button>
+    <button class="btn hidden" id="startQuizBtn">Start Quiz 🎯</button>
+  </div>
+</div>
+
+<!-- Quiz -->
+<div id="quiz">
+  <div class="quiz-card">
+    <div class="question-text" id="questionText"></div>
+    <div id="optionsList"></div>
+    <div class="pager">
+      <button class="btn" id="quizPrev">Prev</button>
+      <div>
+        <button class="btn" id="quizNext">Next</button>
+        <button class="btn hidden" id="submitQuizBtn">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Final -->
+<div id="finalMsg" class="center">
+  <h2>🎊 Keep smiling, Simran! 🎊</h2>
+  <p>Many happy returns of the day 💝</p>
+</div>
+
+<script>
+// Celebration
+const music=document.getElementById("music");
+const celebrateBtn=document.getElementById("celebrateBtn");
+const welcome=document.getElementById("welcome");
+const celebration=document.getElementById("celebration");
+const cake=document.getElementById("cake");
+const toNotesBtn=document.getElementById("toNotesBtn");
+
+celebrateBtn.onclick=()=>{
+  welcome.style.display="none";
+  celebration.style.display="block";
+  try { music.play(); } catch(e){}
+  cake.classList.add("show");
+  launchBalloons();
+  throwConfetti();
+};
+
+// Balloons
+function launchBalloons(){
+  for(let i=0;i<12;i++){
+    const b=document.createElement("div");
+    b.className="balloon";
+    b.textContent="🎈";
+    b.style.left=Math.random()*90+"vw";
+    b.style.animationDuration=(6+Math.random()*6)+"s";
+    document.body.appendChild(b);
+    setTimeout(()=>b.remove(),12000);
+  }
+}
+// Confetti
+function throwConfetti(){
+  const colors=["#ff5f5f","#ffd966","#5fff8d","#5fbaff","#ff9fff"];
+  for(let i=0;i<100;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDuration=(3+Math.random()*3)+"s";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),6000);
+  }
+}
+
+// Notes
+const notes=document.getElementById("notes");
+const stickyContainer=document.getElementById("stickyContainer");
+const noteColors=["#fff8b0","#ffd1dc","#c8f7dc","#e0d7ff","#f7e6c4","#d0f0ff"];
+const notesData=[
+  "May your birthday be as amazing as you.",
+  "बागों में फूलों की बहार हो, जिंदगी मे खुशिया हजार हो, जिंदगी के हर दिन बेमिसाल हो, चाहत की चांदनी हो, अपनों का प्यार हो। चाहा हो जिंदगी मे वो सब बेशुमार हो, मेहनत हो, तारीफ हो, आदर और सबका प्यार हो। दुनिया मे पहचान और बड़ा सा नाम हो। मेरे ओर से जन्मदिन की ढेर सारी बधाई 🎉",
+  "Hope your day is filled with endless smiles 💖",
+  "🙏 May all the Gods bless you with health, happiness, success, and a life full of love and light ✨",
+  "🌹 आप हमेशा मुस्कुराते रहो, हर ख्वाहिश आपकी पूरी हो। जीवन का हर कदम सफलता से भरा हो, और आपका सफर प्यार और खुशियों से सजता रहे।",
+  "🌟 May your dreams shine brighter than the stars and your life glow with endless joy!"
+];
+let currentNote=0;
+notesData.forEach((text,i)=>{
+  const d=document.createElement("div");
+  d.className="sticky";d.id="sticky-"+i;
+  d.style.background=noteColors[i%noteColors.length];
+  d.innerHTML="<p>"+text+"</p>";
+  stickyContainer.appendChild(d);
+});
+const notePrev=document.getElementById("notePrev");
+const noteNext=document.getElementById("noteNext");
+const startQuizBtn=document.getElementById("startQuizBtn");
+
+function showNoteAt(i){
+  if(i<0)i=0;if(i>=notesData.length)i=notesData.length-1;
+  document.querySelectorAll(".sticky").forEach((el,idx)=>{
+    el.classList.remove("show","exit-left","exit-right");
+    if(idx<i){ el.classList.add("exit-left"); }
+    if(idx>i){ el.classList.add("exit-right"); }
+  });
+  document.getElementById("sticky-"+i).classList.add("show");
+  currentNote=i;
+  notePrev.disabled=(i===0);
+  noteNext.disabled=(i===notesData.length-1);
+  if(i===notesData.length-1){
+    startQuizBtn.classList.remove("hidden");
+  }else{
+    startQuizBtn.classList.add("hidden");
+  }
+}
+noteNext.onclick=()=>showNoteAt(currentNote+1);
+notePrev.onclick=()=>showNoteAt(currentNote-1);
+toNotesBtn.onclick=()=>{celebration.style.display="none";notes.style.display="block";showNoteAt(0);};
+startQuizBtn.onclick=()=>{notes.style.display="none";renderQuestion(0);document.getElementById("quiz").style.display="block";};
+
+// Quiz
+const quizData=[
+  {q:"Now you are...?",options:["16","17","60 😁","1 😆"]},
+  {q:"What do you do today?",options:["Cut cake","Go tour","Watch movie","None"]},
+  {q:"How are you feeling now?",options:["Happy","So happy 😊💓","Surprised 😲💗","Nothing 🤭"]},
+  {q:"Do you like my surprise?",options:["Thoda Thoda 😃","Bahut achha 🥰","Surprised 🙈💗","Do like"]}
+];
+let currentQ=0;const answers=new Array(quizData.length).fill(null);
+const questionText=document.getElementById("questionText");
+const optionsList=document.getElementById("optionsList");
+const quizPrev=document.getElementById("quizPrev");
+const quizNext=document.getElementById("quizNext");
+const submitQuizBtn=document.getElementById("submitQuizBtn");
+
+function renderQuestion(i){
+  currentQ=i;const item=quizData[i];
+  questionText.textContent=item.q;optionsList.innerHTML="";
+  item.options.forEach((opt,idx)=>{
+    const id=`q${i}_opt${idx}`;
+    const lbl=document.createElement("label");
+    lbl.className="option";
+    lbl.setAttribute("for",id);
+    lbl.innerHTML=`<input type="radio" id="${id}" name="opt${i}" value="${idx}"> ${opt}`;
+    optionsList.appendChild(lbl);
+    lbl.querySelector("input").addEventListener("change",()=>{
+      answers[i]=idx;
+      updateButtons();
+    });
+  });
+  if(answers[i]!==null){
+    document.querySelector(`#q${i}_opt${answers[i]}`).checked=true;
+  }
+  updateButtons();
+}
+function updateButtons(){
+  quizPrev.disabled=(currentQ===0);
+  if(currentQ===quizData.length-1){
+    quizNext.classList.add("hidden");
+    submitQuizBtn.classList.remove("hidden");
+    submitQuizBtn.disabled=(answers[currentQ]===null);
+  } else {
+    quizNext.classList.remove("hidden");
+    submitQuizBtn.classList.add("hidden");
+    quizNext.disabled=(answers[currentQ]===null);
+  }
+}
+quizPrev.onclick=()=>{if(currentQ>0)renderQuestion(currentQ-1);};
+quizNext.onclick=()=>{if(currentQ<quizData.length-1)renderQuestion(currentQ+1);};
+submitQuizBtn.onclick=()=>{
+  document.getElementById("quiz").style.display="none";
+  document.getElementById("finalMsg").style.display="block";
+};
+
+// Floating Emojis
+const heartEmojis=["❤️","💖","💕","💓","💝"];
+const lovelyEmojis=["🥰","😍","✨","🌸"];
+function spawnEmoji(){
+  const span=document.createElement("span");
+  span.className="emoji";
+  const useHeart=Math.random()<0.75;
+  span.textContent=useHeart?heartEmojis[Math.floor(Math.random()*heartEmojis.length)]
+                            :lovelyEmojis[Math.floor(Math.random()*lovelyEmojis.length)];
+  span.style.left=Math.random()*100+"vw";
+  span.style.fontSize=(16+Math.random()*28)+"px";
+  span.style.animationDuration=(6+Math.random()*6)+"s";
+  document.body.appendChild(span);
+  setTimeout(()=>span.remove(),8000);
+}
+setInterval(spawnEmoji,300);
+</script>
+</body>
+</html>
